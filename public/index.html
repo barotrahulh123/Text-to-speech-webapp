@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTS Web App</title>
+    <style>
+        #loading {
+            display: none;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>TTS Web App</h1>
+    <form id="tts-form">
+        <textarea id="text-input" rows="4" cols="50" placeholder="Enter text here..."></textarea><br>
+        <button type="submit">Synthesize</button>
+    </form>
+    <p id="loading">Loading... Please wait.</p>
+    <audio id="audio-output" controls></audio>
+
+    <script>
+        document.getElementById('tts-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const text = document.getElementById('text-input').value;
+            const loadingElement = document.getElementById('loading');
+            const audioElement = document.getElementById('audio-output');
+
+            // Show the loading indicator
+            loadingElement.style.display = 'block';
+            audioElement.src = ''; // Clear previous audio
+
+            try {
+                const response = await fetch('/synthesize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    audioElement.src = result.audioUrl;
+                } else {
+                    alert(result.error);
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+            } finally {
+                // Hide the loading indicator after the request is complete
+                loadingElement.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
