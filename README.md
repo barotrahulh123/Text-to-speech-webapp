@@ -8,6 +8,7 @@ This is a simple web application that converts text into speech using the `gtts`
 - Simple and clean web interface.
 - Displays a loading message while the audio is being generated.
 - Supports playback of the generated speech in the browser.
+- Add download button for downlaod audio file
 
 ## Prerequisites
 
